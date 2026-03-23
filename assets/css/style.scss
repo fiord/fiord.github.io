@@ -127,15 +127,7 @@ html:not([data-mode]) {
 /* ================================================================
    2. KEYFRAME ANIMATIONS
    ================================================================ */
-@keyframes grid-flow {
-    from {
-        background-position: 0 0, 0 0, 0 0, 0 0;
-    }
-
-    to {
-        background-position: 0 40px, 40px 0, 0 0, 0 0;
-    }
-}
+/* grid-flow は canvas アニメーションに置き換えたため削除 */
 
 @keyframes scanline-drift {
     0% {
@@ -208,40 +200,26 @@ pre,
 }
 
 /* ================================================================
-   4. PAGE BACKGROUND LAYERS
-   Layer order (back → front):
-     ::before  — animated circuit grid
-     ::after   — CRT scanline overlay
+   4. PAGE BACKGROUND — 3D Node Network Canvas
+   canvas#bg-canvas は network-bg.js が描画する。
+   position:fixed / z-index:0 で全ページに固定され、
+   サイドバー (z-index:50) やトップバー (z-index:99) の背面に収まる。
    ================================================================ */
-/* Circuit grid: major lines (200px) + minor lines (40px) + ambient glow */
-body::before {
-    content: "";
+#bg-canvas {
     position: fixed;
     inset: 0;
-    background-image:
-        linear-gradient(rgba(0, 212, 255, 0.12) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 212, 255, 0.12) 1px, transparent 1px),
-        linear-gradient(rgba(0, 212, 255, 0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 212, 255, 0.045) 1px, transparent 1px),
-        radial-gradient(ellipse at 15% 80%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
-        radial-gradient(ellipse at 85% 10%, rgba(0, 80, 255, 0.06) 0%, transparent 45%);
-    background-size:
-        200px 200px,
-        200px 200px,
-        40px 40px,
-        40px 40px,
-        100% 100%,
-        100% 100%;
-    animation: grid-flow 8s linear infinite;
-    pointer-events: none;
+    width: 100%;
+    height: 100%;
     z-index: 0;
+    pointer-events: none;
+    display: block;
 }
 
-
-
-/* Make main wrapper transparent so body::before grid shows through */
+/* コンテンツをキャンバスの前面に保つ */
 #main-wrapper {
     background: transparent !important;
+    position: relative;
+    z-index: 1;
 }
 
 /* ================================================================

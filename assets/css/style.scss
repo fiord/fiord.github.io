@@ -1,0 +1,874 @@
+---
+---
+
+/*
+  If the number of TAB files has changed, the following variable is required.
+  And it must be defined before `@import`.
+*/
+$tab-count: {{ site.tabs | size | plus: 1 }}; // plus 1 for home tab
+
+@import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@300;400;600&family=Exo+2:wght@300;400;700&display=swap");
+
+@import "{{ site.theme }}";
+
+/* =============================================================
+   fiord.dev — Security Engineer Theme  v2
+   Full-depth redesign: CRT scanlines, animated grid,
+   terminal typography, neon glow components, clip-path UI.
+   ============================================================= */
+
+/* ================================================================
+   1. CSS VARIABLES — dark mode overrides
+   ================================================================ */
+html[data-mode="dark"],
+html:not([data-mode]) {
+    /* Core */
+    --main-bg: #060a0f;
+    --mask-bg: #1a2030;
+    --main-border-color: rgba(0, 212, 255, 0.07);
+
+    /* Typography */
+    --text-color: #9ab4c8;
+    --text-muted-color: #3d5a6a;
+    --heading-color: #cce6f8;
+    --blockquote-border-color: rgba(0, 212, 255, 0.22);
+    --blockquote-text-color: #4a6878;
+
+    /* Links */
+    --link-color: #00d4ff;
+    --link-underline-color: rgba(0, 212, 255, 0.2);
+
+    /* Buttons */
+    --button-bg: #0b1520;
+    --btn-border-color: rgba(0, 212, 255, 0.16);
+    --btn-box-shadow: rgba(0, 0, 0, 0.7);
+    --btn-backtotop-color: #00d4ff;
+    --btn-backtotop-border-color: rgba(0, 212, 255, 0.22);
+
+    /* Sidebar */
+    --sidebar-bg: linear-gradient(180deg, #040710 0%, #060a14 50%, #080c18 100%);
+    --sidebar-muted-color: #1e3848;
+    --sidebar-active-color: #00ff88;
+    --nav-cursor-color: #00ff88;
+    --sidebar-btn-bg: rgba(0, 212, 255, 0.07);
+
+    /* Topbar */
+    --topbar-text-color: #7a9ab0;
+    --topbar-wrapper-bg: #040710;
+    --search-wrapper-bg: rgba(0, 15, 30, 0.9);
+    --search-wrapper-border-color: rgba(0, 212, 255, 0.1);
+    --search-icon-color: #1e4858;
+    --input-focus-border-color: rgba(0, 212, 255, 0.38);
+
+    /* Cards */
+    --post-list-text-color: #7a9ab0;
+    --card-bg: #080e16;
+    --card-header-bg: #0b1320;
+    --card-hovor-bg: #0d1824;
+    --card-border-color: rgba(0, 212, 255, 0.09);
+    --card-box-shadow: rgba(0, 0, 0, 0.7);
+    --label-color: #2a5868;
+    --img-bg: radial-gradient(circle, #0a1020 0%, #050810 100%);
+
+    /* Pagination */
+    --btn-patinator-text-color: #7a9ab0;
+    --btn-paginator-hover-color: #0d1824;
+    --btn-paginator-border-color: rgba(0, 212, 255, 0.13);
+    --btn-text-color: #9ab4c8;
+
+    /* Pins */
+    --pin-bg: rgba(0, 255, 136, 0.05);
+    --pin-color: #00ff88;
+
+    /* TOC */
+    --toc-highlight: #00ff88;
+
+    /* Tags */
+    --tag-bg: rgba(0, 212, 255, 0.04);
+    --tag-border: rgba(0, 212, 255, 0.18);
+    --tag-shadow: rgba(0, 0, 0, 0.5);
+    --tag-hover: rgba(0, 212, 255, 0.1);
+    --search-tag-bg: rgba(0, 212, 255, 0.04);
+
+    /* Tables */
+    --tb-odd-bg: rgba(0, 18, 35, 0.55);
+    --tb-even-bg: rgba(6, 10, 20, 0.85);
+    --tb-border-color: rgba(0, 212, 255, 0.06);
+
+    /* Misc */
+    --footnote-target-bg: rgba(0, 80, 160, 0.3);
+    --kbd-wrap-color: rgba(0, 212, 255, 0.28);
+    --kbd-text-color: #00d4ff;
+    --kbd-bg-color: #0b1520;
+    --checkbox-color: #1e4858;
+    --checkbox-checked-color: #00ff88;
+    --dash-color: rgba(0, 212, 255, 0.12);
+
+    /* Categories / Archives */
+    --categories-border: rgba(0, 212, 255, 0.09);
+    --categories-hover-bg: rgba(0, 212, 255, 0.07);
+    --categories-icon-hover-color: #00d4ff;
+    --timeline-color: rgba(0, 212, 255, 0.1);
+    --timeline-node-bg: #00d4ff;
+    --timeline-year-dot-color: #060a0f;
+
+    /* Prompts */
+    --prompt-tip-bg: rgba(0, 255, 136, 0.07);
+    --prompt-tip-icon-color: #00ff88;
+    --prompt-info-bg: rgba(0, 90, 190, 0.16);
+    --prompt-info-icon-color: #00d4ff;
+    --prompt-warning-bg: rgba(255, 150, 0, 0.1);
+    --prompt-warning-icon-color: rgba(255, 165, 0, 0.85);
+    --prompt-danger-bg: rgba(180, 15, 15, 0.14);
+    --prompt-danger-icon-color: #ff4040;
+    --prompt-text-color: rgba(195, 215, 235, 0.8);
+}
+
+/* ================================================================
+   2. KEYFRAME ANIMATIONS
+   ================================================================ */
+@keyframes grid-flow {
+    from {
+        background-position: 0 0, 0 0, 0 0, 0 0;
+    }
+
+    to {
+        background-position: 0 40px, 40px 0, 0 0, 0 0;
+    }
+}
+
+@keyframes scanline-drift {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(100vh);
+    }
+}
+
+@keyframes neon-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes cursor-blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+@keyframes border-glow-pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 6px rgba(0, 212, 255, 0.15);
+    }
+
+    50% {
+        box-shadow: 0 0 16px rgba(0, 212, 255, 0.35);
+    }
+}
+
+/* ================================================================
+   3. GLOBAL TYPOGRAPHY
+   ================================================================ */
+body {
+    font-family: "Exo 2", "Source Sans Pro", "Microsoft Yahei", sans-serif;
+    background-color: #060a0f;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-family: "Share Tech Mono", "Courier New", monospace;
+    letter-spacing: 0.03em;
+}
+
+code,
+kbd,
+pre,
+.highlighter-rouge {
+    font-family: "JetBrains Mono", "Fira Code", "Courier New", monospace !important;
+}
+
+/* ================================================================
+   4. PAGE BACKGROUND LAYERS
+   Layer order (back → front):
+     ::before  — animated circuit grid
+     ::after   — CRT scanline overlay
+   ================================================================ */
+/* Circuit grid: major lines (200px) + minor lines (40px) + ambient glow */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(0, 212, 255, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 255, 0.12) 1px, transparent 1px),
+        linear-gradient(rgba(0, 212, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 255, 0.045) 1px, transparent 1px),
+        radial-gradient(ellipse at 15% 80%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 10%, rgba(0, 80, 255, 0.06) 0%, transparent 45%);
+    background-size:
+        200px 200px,
+        200px 200px,
+        40px 40px,
+        40px 40px,
+        100% 100%,
+        100% 100%;
+    animation: grid-flow 8s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+
+
+/* Make main wrapper transparent so body::before grid shows through */
+#main-wrapper {
+    background: transparent !important;
+}
+
+/* ================================================================
+   5. SIDEBAR
+   ================================================================ */
+#sidebar {
+    border-right: 1px solid rgba(0, 212, 255, 0.1);
+    box-shadow: 6px 0 40px rgba(0, 0, 0, 0.8), 2px 0 10px rgba(0, 212, 255, 0.03);
+
+    /* Animated top border accent */
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(0, 255, 136, 0.6) 30%,
+                rgba(0, 212, 255, 0.5) 70%,
+                transparent 100%);
+        animation: neon-pulse 3s ease-in-out infinite;
+    }
+
+    /* Avatar */
+    #avatar>a {
+        border: 2px solid rgba(0, 255, 136, 0.35);
+        box-shadow: 0 0 15px rgba(0, 255, 136, 0.12), 0 0 40px rgba(0, 255, 136, 0.05);
+        transition: all 0.35s ease;
+
+        &:hover {
+            border-color: #00ff88;
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.45), 0 0 60px rgba(0, 255, 136, 0.15);
+        }
+    }
+
+    /* Site title */
+    .site-title a {
+        font-family: "Share Tech Mono", monospace;
+        color: #00ff88 !important;
+        letter-spacing: 1.5px;
+        text-shadow:
+            0 0 10px rgba(0, 255, 136, 0.6),
+            0 0 25px rgba(0, 255, 136, 0.2),
+            0 0 50px rgba(0, 255, 136, 0.08);
+        transition: text-shadow 0.35s ease;
+
+        &:hover {
+            text-shadow:
+                0 0 15px rgba(0, 255, 136, 0.9),
+                0 0 35px rgba(0, 255, 136, 0.4),
+                0 0 70px rgba(0, 255, 136, 0.15);
+        }
+
+        /* Blinking cursor after title */
+        &::after {
+            content: "_";
+            animation: cursor-blink 1.2s step-end infinite;
+            color: #00ff88;
+            opacity: 0.9;
+        }
+    }
+
+    /* Subtitle as inline comment */
+    .site-subtitle {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.68rem;
+        color: rgba(0, 255, 136, 0.3) !important;
+        letter-spacing: 0.3px;
+        line-height: 1.4;
+
+        &::before {
+            content: "// ";
+            color: rgba(0, 212, 255, 0.25);
+        }
+    }
+
+    /* Nav links */
+    .nav-link {
+        font-family: "Share Tech Mono", monospace;
+        letter-spacing: 2px;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        transition: color 0.2s, text-shadow 0.2s, letter-spacing 0.2s;
+
+        &:hover {
+            letter-spacing: 3px;
+        }
+    }
+
+    .nav-item.active .nav-link {
+        color: #00ff88 !important;
+        text-shadow: 0 0 10px rgba(0, 255, 136, 0.55);
+    }
+
+    .nav-item:not(.active):hover .nav-link {
+        color: #00d4ff !important;
+        text-shadow: 0 0 8px rgba(0, 212, 255, 0.45);
+    }
+
+    /* Bottom icons */
+    .sidebar-bottom {
+        i {
+            color: #1e3848 !important;
+            transition: color 0.2s, text-shadow 0.2s;
+        }
+
+        a:hover i,
+        .mode-toggle:hover>i {
+            color: #00d4ff !important;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.55);
+        }
+    }
+}
+
+/* ================================================================
+   6. TOPBAR
+   ================================================================ */
+#topbar-wrapper {
+    border-bottom: 1px solid rgba(0, 212, 255, 0.08);
+    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.7);
+
+    /* Bottom accent line */
+    &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(0, 212, 255, 0.3) 50%,
+                transparent 100%);
+    }
+}
+
+/* Breadcrumb prefix */
+#topbar #breadcrumb::before {
+    content: "> ";
+    color: #00ff88;
+    font-family: "JetBrains Mono", monospace;
+    opacity: 0.7;
+}
+
+/* ================================================================
+   7. LINKS
+   ================================================================ */
+a:not(.btn):not(.nav-link):not(.post-tag):not(.tag):not(.img-link) {
+    transition: color 0.2s, text-shadow 0.2s;
+
+    &:hover {
+        text-shadow: 0 0 8px rgba(0, 212, 255, 0.35);
+    }
+}
+
+/* ================================================================
+   8. CODE BLOCKS
+   ================================================================ */
+.highlighter-rouge,
+figure.highlight,
+.highlight {
+    border: 1px solid rgba(0, 212, 255, 0.09) !important;
+    border-radius: 6px;
+    box-shadow:
+        0 0 25px rgba(0, 0, 0, 0.6),
+        inset 0 0 20px rgba(0, 0, 0, 0.2),
+        0 0 1px rgba(0, 212, 255, 0.05);
+}
+
+.code-header {
+    background: linear-gradient(90deg, #090f1a 0%, #0c1422 100%);
+    border-bottom: 1px solid rgba(0, 212, 255, 0.09);
+    border-radius: 6px 6px 0 0;
+
+    /* macOS-style traffic lights in security colors */
+    &::before {
+        background-color: #ff4757;
+        box-shadow:
+            1.25rem 0 0 #ffa502,
+            2.5rem 0 0 #00ff88;
+    }
+
+    span {
+        color: rgba(0, 212, 255, 0.4);
+        font-family: "JetBrains Mono", monospace;
+
+        &::after {
+            font-family: "JetBrains Mono", monospace;
+        }
+    }
+}
+
+/* ================================================================
+   9. POST LIST CARDS
+   ================================================================ */
+#post-list .post-preview {
+    background: var(--card-bg);
+    border-color: var(--card-border-color);
+    border-left: 2px solid rgba(0, 255, 136, 0.18);
+    position: relative;
+    transition: all 0.3s ease;
+    overflow: hidden;
+
+    /* Scan-line shimmer on hover */
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(90deg,
+                transparent,
+                rgba(0, 212, 255, 0.04),
+                transparent);
+        transition: left 0.5s ease;
+    }
+
+    &:hover {
+        border-left-color: #00ff88;
+        border-color: rgba(0, 212, 255, 0.22) !important;
+        border-left-color: rgba(0, 255, 136, 0.6) !important;
+        box-shadow:
+            0 0 25px rgba(0, 212, 255, 0.07),
+            0 6px 24px rgba(0, 0, 0, 0.6),
+            inset 0 0 20px rgba(0, 212, 255, 0.02) !important;
+        transform: translateY(-2px);
+        background: var(--card-hovor-bg) !important;
+
+        &::before {
+            left: 150%;
+        }
+    }
+
+    h1 {
+        font-family: "Exo 2", sans-serif;
+        font-weight: 400;
+
+        a {
+            transition: color 0.2s, text-shadow 0.2s;
+
+            &:hover {
+                color: #00d4ff !important;
+                text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+            }
+        }
+    }
+}
+
+/* ================================================================
+   10. POST CONTENT HEADINGS
+   ================================================================ */
+.post-content {
+    h2 {
+        font-family: "Share Tech Mono", monospace;
+        border-bottom: 1px solid rgba(0, 212, 255, 0.12);
+        padding-bottom: 0.3rem;
+        letter-spacing: 0.05em;
+
+        &::before {
+            content: "## ";
+            color: rgba(0, 212, 255, 0.3);
+            font-size: 0.85em;
+        }
+    }
+
+    h3 {
+        font-family: "Share Tech Mono", monospace;
+        letter-spacing: 0.04em;
+
+        &::before {
+            content: "### ";
+            color: rgba(0, 212, 255, 0.22);
+            font-size: 0.8em;
+        }
+    }
+
+    h4::before {
+        content: "> ";
+        color: rgba(0, 255, 136, 0.3);
+        font-family: "JetBrains Mono", monospace;
+    }
+}
+
+/* Post page H1 title */
+.post h1.post-title,
+h1.dynamic-title {
+    font-family: "Share Tech Mono", monospace;
+    letter-spacing: 0.04em;
+
+    &::before {
+        content: "$ ";
+        color: #00ff88;
+        opacity: 0.6;
+    }
+}
+
+/* ================================================================
+   11. BLOCKQUOTE
+   ================================================================ */
+blockquote:not([class^="prompt-"]) {
+    border-left: 3px solid rgba(0, 212, 255, 0.35);
+    background: rgba(0, 15, 35, 0.4);
+    padding: 0.7rem 1.1rem;
+    border-radius: 0 4px 4px 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.9em;
+
+    &::before {
+        content: '" ';
+        color: rgba(0, 212, 255, 0.2);
+        font-size: 1.5em;
+        line-height: 0;
+        vertical-align: -0.4em;
+        margin-right: 0.2em;
+    }
+}
+
+/* ================================================================
+   12. TAGS
+   ================================================================ */
+.tag,
+.post-tag {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.75rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+        box-shadow: 0 0 12px rgba(0, 212, 255, 0.22) !important;
+        border-color: rgba(0, 212, 255, 0.4) !important;
+        color: #00d4ff !important;
+        background: rgba(0, 212, 255, 0.07) !important;
+        text-shadow: 0 0 5px rgba(0, 212, 255, 0.3);
+    }
+}
+
+/* ================================================================
+   13. TABLE OF CONTENTS
+   ================================================================ */
+#toc-wrapper {
+    border-left: 1px solid rgba(0, 212, 255, 0.1);
+
+    ul {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.8rem;
+
+        .toc-link:hover {
+            color: #00ff88;
+            text-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+        }
+
+        .is-active-link {
+            color: #00ff88 !important;
+            text-shadow: 0 0 5px rgba(0, 255, 136, 0.35);
+
+            &::before {
+                background-color: #00ff88 !important;
+                box-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+            }
+        }
+    }
+}
+
+/* ================================================================
+   14. TABLES
+   ================================================================ */
+.table-wrapper>table {
+    thead {
+        border-bottom: 2px solid rgba(0, 212, 255, 0.18);
+
+        th {
+            font-family: "Share Tech Mono", monospace;
+            letter-spacing: 0.05em;
+            color: #00d4ff;
+        }
+    }
+
+    tr {
+        border-bottom-color: rgba(0, 212, 255, 0.05) !important;
+    }
+}
+
+/* ================================================================
+   15. BACK-TO-TOP BUTTON
+   ================================================================ */
+#back-to-top {
+    background: #0a1520;
+    border: 1px solid rgba(0, 212, 255, 0.22);
+    color: #00d4ff;
+    animation: border-glow-pulse 3s ease-in-out infinite;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.4) !important;
+        border-color: #00d4ff;
+        animation: none;
+    }
+}
+
+/* ================================================================
+   16. RELATED POSTS
+   ================================================================ */
+#related-posts .card {
+    border-color: rgba(0, 212, 255, 0.09);
+    background-color: #080e16;
+    transition: all 0.3s ease;
+
+    &:hover {
+        border-color: rgba(0, 212, 255, 0.22);
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.07) !important;
+        transform: translate3d(0, -3px, 0);
+    }
+
+    h3 {
+        font-family: "Share Tech Mono", monospace;
+    }
+}
+
+/* ================================================================
+   17. FOOTER
+   ================================================================ */
+footer {
+    border-top: 1px solid rgba(0, 212, 255, 0.07);
+
+    &::before {
+        content: "";
+        display: block;
+        height: 1px;
+        background: linear-gradient(90deg,
+                transparent,
+                rgba(0, 212, 255, 0.2),
+                rgba(0, 255, 136, 0.15),
+                rgba(0, 212, 255, 0.2),
+                transparent);
+        margin-bottom: 0;
+    }
+
+    a {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+    }
+}
+
+/* ================================================================
+   18. ARCHIVES TIMELINE
+   ================================================================ */
+#archives {
+    .year {
+        font-family: "Share Tech Mono", monospace;
+        color: #00d4ff;
+        text-shadow: 0 0 8px rgba(0, 212, 255, 0.3);
+
+        &::after {
+            background-color: #060a0f;
+            border-color: #00d4ff;
+            box-shadow: 0 0 8px rgba(0, 212, 255, 0.65);
+        }
+    }
+
+    a {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.95rem;
+
+        &::before {
+            background-color: rgba(0, 212, 255, 0.65);
+            box-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+        }
+    }
+}
+
+/* ================================================================
+   19. SEARCH
+   ================================================================ */
+#search-wrapper {
+    border-radius: 3px;
+    border-color: rgba(0, 212, 255, 0.1);
+    font-family: "JetBrains Mono", monospace;
+
+    &:focus-within {
+        border-color: rgba(0, 212, 255, 0.35);
+        box-shadow: 0 0 12px rgba(0, 212, 255, 0.1);
+    }
+}
+
+#search-input {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.85rem;
+}
+
+#search-results a {
+    font-family: "Exo 2", sans-serif;
+}
+
+/* ================================================================
+   20. RIGHT PANEL
+   ================================================================ */
+#panel-wrapper {
+    .panel-heading {
+        font-family: "Share Tech Mono", monospace;
+        color: #00ff88 !important;
+        font-size: 0.72rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        text-shadow: 0 0 6px rgba(0, 255, 136, 0.3);
+    }
+
+    .post-tag:hover {
+        background-color: rgba(0, 212, 255, 0.08) !important;
+        border-color: rgba(0, 212, 255, 0.38) !important;
+        color: #00d4ff !important;
+    }
+}
+
+/* ================================================================
+   21. PAGINATION
+   ================================================================ */
+.pagination {
+    font-family: "JetBrains Mono", monospace;
+
+    .page-item .page-link {
+        background-color: #0a1520;
+        border-color: rgba(0, 212, 255, 0.13);
+        transition: all 0.2s;
+
+        &:hover {
+            background-color: #0d1824;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.18);
+        }
+    }
+
+    .page-item.active .page-link {
+        background-color: #0d1824;
+        border-color: rgba(0, 212, 255, 0.38);
+        color: #00d4ff;
+        box-shadow: 0 0 8px rgba(0, 212, 255, 0.2);
+    }
+}
+
+/* ================================================================
+   22. CATEGORIES PAGE
+   ================================================================ */
+.categories {
+    .card-header {
+        font-family: "Share Tech Mono", monospace;
+        color: #00d4ff;
+        letter-spacing: 0.05em;
+    }
+}
+
+/* ================================================================
+   23. NOTIFICATION TOAST
+   ================================================================ */
+#notification.toast.show {
+    background-color: rgba(8, 14, 25, 0.92);
+    color: #00d4ff;
+    border: 1px solid rgba(0, 212, 255, 0.22);
+    box-shadow: 0 0 25px rgba(0, 212, 255, 0.15);
+    font-family: "JetBrains Mono", monospace;
+}
+
+/* ================================================================
+   24. KEYBOARD SHORTCUTS (kbd)
+   ================================================================ */
+kbd {
+    font-family: "JetBrains Mono", monospace;
+    border-color: rgba(0, 212, 255, 0.28);
+    box-shadow: inset 0 -2px 0 rgba(0, 212, 255, 0.22);
+}
+
+/* ================================================================
+   25. POST META & TAIL
+   ================================================================ */
+.post-meta {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+}
+
+.post-tail-wrapper {
+    border-bottom-color: rgba(0, 212, 255, 0.08);
+}
+
+/* ================================================================
+   26. CATEGORIES / TAGS PAGE HEADINGS
+   ================================================================ */
+#page-category h1,
+#page-tag h1 {
+    font-family: "Share Tech Mono", monospace;
+    color: #00d4ff;
+    letter-spacing: 0.05em;
+}
+
+/* ================================================================
+   27. PROMPT BOXES
+   ================================================================ */
+blockquote.prompt-tip,
+blockquote.prompt-info,
+blockquote.prompt-warning,
+blockquote.prompt-danger {
+    border-radius: 0 6px 6px 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.88em;
+}
+
+/* ================================================================
+   28. POST NAVIGATION BUTTONS
+   ================================================================ */
+.post-navigation .btn {
+    font-family: "Share Tech Mono", monospace;
+    letter-spacing: 0.04em;
+    border-color: rgba(0, 212, 255, 0.15);
+    transition: all 0.25s ease;
+
+    &:hover {
+        background: #0d1824;
+        color: #00d4ff;
+        border-color: rgba(0, 212, 255, 0.4);
+        box-shadow: 0 0 12px rgba(0, 212, 255, 0.15);
+    }
+}
+
+/* ================================================================
+   29. INLINE CODE
+   ================================================================ */
+code.highlighter-rouge {
+    border: 1px solid rgba(0, 212, 255, 0.1);
+    color: #00d4ff;
+    background-color: rgba(0, 20, 40, 0.5);
+}

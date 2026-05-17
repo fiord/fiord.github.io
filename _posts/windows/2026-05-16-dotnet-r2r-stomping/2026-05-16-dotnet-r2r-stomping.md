@@ -181,9 +181,9 @@ dotnet publish -c Release -r win-x64 --self-contained true /p:PublishReadyToRun=
 
 生成されたコードは IL ではなくネイティブコードになっています。このため、dnSpy や ILSpy などの .NET でコンパイラでは解析が出来ません。
 
-![the result of dnSpy](dnspy-result.png)
+![the result of dnSpy](/assets/img/posts/dotnet-r2r-stomping/dnspy-result.png)
 
-![the result of ilSpy](ilspy-result.png)
+![the result of ilSpy](/assets/img/posts/dotnet-r2r-stomping/ilspy-result.png)
 
 ## R2R Stomping
 

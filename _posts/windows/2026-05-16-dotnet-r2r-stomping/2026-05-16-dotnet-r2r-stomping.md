@@ -185,6 +185,87 @@ dotnet publish -c Release -r win-x64 --self-contained true /p:PublishReadyToRun=
 
 ![the result of ilSpy](/assets/img/posts/dotnet-r2r-stomping/ilspy-result.png)
 
+Ghidra で解析すると、(pdb ファイルがあるので) このような形で復元が可能です。
+
+```cpp
+void CSharp_AES_Program___Main__
+               (longlong param_1,undefined8 param_2,ulonglong *param_3,uint *param_4)
+
+{
+  longlong extraout_RAX;
+  undefined8 *extraout_RAX_00;
+  undefined **ppuVar1;
+  longlong lVar2;
+  ulonglong *extraout_RAX_01;
+  longlong *plVar3;
+  longlong lVar4;
+  undefined1 *puVar5;
+  undefined8 uVar6;
+  ulonglong *puVar7;
+  uint *puVar8;
+  longlong local_38;
+  undefined8 local_30;
+  
+  local_38 = 0;
+  local_30 = 0;
+  RhpNewArrayFast();
+  *(undefined8 *)(extraout_RAX + 0x10) = 0xa6d2ae2816157e2b;
+  *(undefined8 *)(extraout_RAX + 0x18) = 0x3c4fcf098815f7ab;
+  *(undefined8 *)(extraout_RAX + 0x20) = 0xa54d8bf360712e76;
+  *(undefined8 *)(extraout_RAX + 0x28) = 0xfe0c1945904d786a;
+  puVar5 = &__Array<UInt8>::`vftable';
+  uVar6 = 0x10;
+  RhpNewArrayFast();
+  extraout_RAX_00[2] = 0x706050403020100;
+  extraout_RAX_00[3] = 0xf0e0d0c0b0a0908;
+  if (*(int *)(param_1 + 8) == 0) {
+    ppuVar1 = (undefined **)
+              System_Console_System_Console__ReadLine(puVar5,uVar6,(uint *)param_3,param_4);
+    if (ppuVar1 == (undefined **)0x0) {
+      ppuVar1 = &__Str_;
+    }
+  }
+  else {
+    ppuVar1 = (undefined **)String__Join_1(0x1400eb310,param_1);
+  }
+  if (S_P_CoreLib_System_Text_UTF32Encoding::__NONGCSTATICS != (undefined *)0x0) {
+    __GetGCStaticBase_S_P_CoreLib_System_Text_UTF8Encoding();
+  }
+  lVar2 = S_P_CoreLib_System_Text_UTF8Encoding_UTF8EncodingSealed__GetBytes
+                    (*(longlong **)(S_P_CoreLib_System_Text_UTF8Encoding::__GCSTATICS + 8),
+                     (longlong)ppuVar1);
+  RhpNewFast();
+  System_Security_Cryptography_System_Security_Cryptography_Aes___ctor((longlong)extraout_RAX_01);
+  local_38 = extraout_RAX + 0x10;
+  local_30 = CONCAT44(local_30._4_4_,0x20);
+  System_Security_Cryptography_System_Security_Cryptography_SymmetricAlgorithm__SetKey
+            ((longlong)extraout_RAX_01,&local_38,param_3,param_4);
+  System_Security_Cryptography_System_Security_Cryptography_SymmetricAlgorithm__set_IV
+            ((longlong)extraout_RAX_01,extraout_RAX_00);
+  System_Security_Cryptography_System_Security_Cryptography_SymmetricAlgorithm__set_Mode
+            ((longlong)extraout_RAX_01,1);
+  uVar6 = 2;
+  System_Security_Cryptography_System_Security_Cryptography_SymmetricAlgorithm__set_Padding
+            ((longlong)extraout_RAX_01,2);
+  plVar3 = (longlong *)
+           System_Security_Cryptography_System_Security_Cryptography_AesImplementation__CreateEncryp tor
+                     (extraout_RAX_01,uVar6,param_3,param_4);
+  puVar8 = (uint *)(ulonglong)*(uint *)(lVar2 + 8);
+  puVar7 = (ulonglong *)0x0;
+  lVar4 = System_Security_Cryptography_System_Security_Cryptography_UniversalCryptoTransform__Transf ormFinalBlock
+                    (plVar3,lVar2,0,*(uint *)(lVar2 + 8));
+  uVar6 = S_P_CoreLib_System_Convert__ToBase64String(lVar4);
+  System_Console_System_Console__WriteLine_12(uVar6,lVar2,(uint *)puVar7,puVar8);
+  (*(code *)
+    __InterfaceDispatchCell_S_P_CoreLib_System_IDisposable__Dispose_CSharp_AES_Program___Main__)
+            (plVar3);
+  System_Security_Cryptography_System_Security_Cryptography_AesImplementation__Dispose
+            ((longlong)extraout_RAX_01,'\x01',puVar7,puVar8);
+  S_P_CoreLib_System_GC__SuppressFinalize(extraout_RAX_01);
+  return;
+}
+```
+
 ## R2R Stomping
 
 .NET のコンパイルにおいて、DLL ファイルが生成されることがあります。JIT コンパイルされたコードでは、こちらを参照することで IL コードのデコンパイルが可能です。

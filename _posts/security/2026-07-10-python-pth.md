@@ -38,10 +38,12 @@ ENABLE_USER_SITE: True
 current directory も対象となるため、例えば複数プロジェクトで共通して使いたいライブラリがある際、下記の手順で容易に利用することが出来ます。
 
 1. `<path to project_dir>/lib.pth` のように `.pth` ファイルを作成する。
+
 ```
 <path to library_dir>
 ../packages/core などもモノレポの場合は便利そうです
 ```
+
 2. `import` 実行時に上記で指定したパスが追加されます。そのため、`import <library>` のように別ディレクトリに存在するライブラリを利用することが可能です。
 
 ## .pth ファイルの悪用

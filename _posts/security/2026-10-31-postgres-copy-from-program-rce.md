@@ -33,8 +33,12 @@ COPY mytable TO '/path/to/out.csv' WITH (FORMAT csv);
 COPY mytable FROM PROGRAM 'ls -la /';
 ```
 
-公式ドキュメントにも「`PROGRAM` で指定したコマンドは **サーバーを実行している OS ユーザーの権限で実行される**」と明記されています。
-つまり Linux 上の典型的な構成なら `postgres` ユーザーとしてコマンドが走ります。
+公式ドキュメントにも下記の記述があります。
+
+> A command to execute. In COPY FROM, the input is read from standard output of the command, and in COPY TO, the output is written to the standard input of the command.
+> Note that the command is invoked by the shell, so if you need to pass any arguments that come from an untrusted source, you must be careful to strip or escape any special characters that might have a special meaning for the shell. For security reasons, it is best to use a fixed command string, or at least avoid including any user input in it.
+
+Linux 上の典型的な構成なら `postgres` ユーザーとしてコマンドが走ります。
 
 https://www.postgresql.org/docs/current/sql-copy.html
 
@@ -78,7 +82,7 @@ GRANT pg_execute_server_program TO app_user;
 
 同様に、サーバー上のファイルを直接読み書きする
 `pg_read_server_files` / `pg_write_server_files` もファイル経由の攻撃に悪用され得るロールです。
-これらは「サーバー OS に手が届く」強い権限であることを意識しておく必要があります。
+これらは DB からサーバー OS に手が届く強い権限であることを意識しておく必要があります。
 
 自分が属しているロールは次で確認できます。
 
